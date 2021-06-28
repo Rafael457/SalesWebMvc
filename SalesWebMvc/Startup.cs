@@ -14,6 +14,8 @@ using SalesWebMvc.Data;
 using SalesWebMvc.Services;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Identity;
+using SalesWebMvc.Models;
 
 namespace SalesWebMvc
 {
@@ -21,6 +23,7 @@ namespace SalesWebMvc
     {
         public Startup(IConfiguration configuration)
         {
+
             Configuration = configuration;
         }
 
@@ -28,7 +31,7 @@ namespace SalesWebMvc
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
+        { 
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -36,6 +39,20 @@ namespace SalesWebMvc
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<SalesWebMvcContext>();
+
+            //services.ConfigureApplicationCookie(options =>
+            //{
+            //    options.AccessDeniedPath = new PathString("xxxx/AccessDenied");
+            //});
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequiredLength = 6;
+                options.Password.RequiredUniqueChars = 1;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -72,10 +89,11 @@ namespace SalesWebMvc
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
 
+            app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();

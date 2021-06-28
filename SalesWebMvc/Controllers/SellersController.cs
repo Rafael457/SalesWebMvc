@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SalesWebMvc.Models;
 using SalesWebMvc.Services;
@@ -10,6 +11,7 @@ using SalesWebMvc.Services.Exceptions;
 
 namespace SalesWebMvc.Controllers
 {
+    [Authorize]
     public class SellersController : Controller
     {
         private readonly SellerService _sellerService;
